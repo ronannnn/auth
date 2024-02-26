@@ -1,0 +1,41 @@
+[sys]
+http-addr = "0.0.0.0"
+http-port = "5555"
+
+[log]
+level = "INFO"
+log-store-path = "logs/"
+latest-filename = "gx-fms.log"
+log-in-console = true
+log-in-rotate-file = true
+
+[jwt]
+access-token-hour-duration = 1
+refresh-token-hour-duration = 24
+access-token-secret = "qpwoalskzmxn1029"
+refresh-token-secret = "122f9dfjkdsla"
+enable = true
+
+[db]
+db-type = "mssql"
+username = ""
+password = ""
+addr = ""
+port = ""
+schema = ""
+configs = ""
+max-idle-conns = 10
+max-open-conns = 50
+conn-max-lifetime = 14400
+enable-log = false
+
+[dfs]
+endpoint = ""
+access-key-id = ""
+secret-access-key = ""
+location = ""
+root-bucket = ""
+secure = false
+
+[user]
+default-hashed-password = ""
