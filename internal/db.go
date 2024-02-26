@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"github.com/ronannnn/auth/services/jwt/refreshtoken"
 	"github.com/ronannnn/infra"
 	"github.com/ronannnn/infra/cfg"
 	"github.com/ronannnn/infra/models"
@@ -9,6 +10,7 @@ import (
 )
 
 var tables = []any{
+	refreshtoken.RefreshToken{},
 	models.User{},
 	models.Menu{},
 	models.Role{},

@@ -10,7 +10,6 @@ import (
 	"github.com/ronannnn/auth/services/jwt/accesstoken"
 	"github.com/ronannnn/auth/services/jwt/refreshtoken"
 	"github.com/ronannnn/infra/cfg"
-	"github.com/ronannnn/infra/models"
 	"gorm.io/gorm"
 )
 
@@ -20,7 +19,7 @@ var (
 
 type Service interface {
 	// generate access token and refresh token， used for login
-	GenerateTokens(ctx context.Context, claims models.BaseClaims) (refreshToken string, accessToken string, err error)
+	GenerateTokens(ctx context.Context, claims refreshtoken.BaseClaims) (refreshToken string, accessToken string, err error)
 	// update access token and refresh token
 	UpdateTokens(ctx context.Context, refreshToken string) (newRefreshToken string, accessToken string, err error)
 	// disable refresh token
@@ -53,7 +52,7 @@ type ServiceImpl struct {
 	accesstokenService  accesstoken.Service
 }
 
-func (srv *ServiceImpl) GenerateTokens(ctx context.Context, claims models.BaseClaims) (refreshToken string, accessToken string, err error) {
+func (srv *ServiceImpl) GenerateTokens(ctx context.Context, claims refreshtoken.BaseClaims) (refreshToken string, accessToken string, err error) {
 	err = srv.db.Transaction(func(tx *gorm.DB) (err error) {
 		refreshTokenClaims := claims.ToMap()
 		jwtauth.SetExpiryIn(refreshTokenClaims, time.Duration(srv.cfg.RefreshTokenHourDuration)*time.Hour)
@@ -91,7 +90,7 @@ func (srv *ServiceImpl) UpdateTokens(ctx context.Context, refreshToken string) (
 	if tokenInDb != refreshToken {
 		return "", "", fmt.Errorf("incorrect refresh token")
 	}
-	return srv.GenerateTokens(ctx, models.BaseClaims{
+	return srv.GenerateTokens(ctx, refreshtoken.BaseClaims{
 		UserId:   uint(userId.(float64)),
 		Username: username.(string),
 	})

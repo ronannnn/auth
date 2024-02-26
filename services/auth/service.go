@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/ronannnn/auth/services/jwt"
+	"github.com/ronannnn/auth/services/jwt/refreshtoken"
 	"github.com/ronannnn/auth/services/user"
 	"github.com/ronannnn/infra/models"
 	"gorm.io/gorm"
@@ -40,7 +41,7 @@ func (srv *ServiceImpl) LoginByUsername(ctx context.Context, username, password 
 		return nil, models.ErrWrongUsernameOrPassword
 	}
 	var refreshToken, accessToken string
-	if refreshToken, accessToken, err = srv.jwtService.GenerateTokens(ctx, models.BaseClaims{
+	if refreshToken, accessToken, err = srv.jwtService.GenerateTokens(ctx, refreshtoken.BaseClaims{
 		UserId:   user.Id,
 		Username: *user.Username,
 	}); err != nil {
