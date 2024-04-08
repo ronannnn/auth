@@ -3,8 +3,8 @@ package apis
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/ronannnn/auth/services/auth"
 	"github.com/ronannnn/auth/services/jwt"
+	"github.com/ronannnn/auth/services/login"
 	"github.com/ronannnn/infra"
 	"github.com/ronannnn/infra/cfg"
 	"go.uber.org/zap"
@@ -13,7 +13,7 @@ import (
 type HttpServer struct {
 	infra.BaseHttpServer
 	infraMiddleware infra.Middleware
-	authService     auth.Service
+	loginService    login.Service
 	jwtService      jwt.Service
 }
 
@@ -21,7 +21,7 @@ func NewHttpServer(
 	sys *cfg.Sys,
 	log *zap.SugaredLogger,
 	infraMiddleware infra.Middleware,
-	authService auth.Service,
+	loginService login.Service,
 	jwtService jwt.Service,
 ) *HttpServer {
 	hs := &HttpServer{
@@ -30,7 +30,7 @@ func NewHttpServer(
 			Log: log,
 		},
 		infraMiddleware: infraMiddleware,
-		authService:     authService,
+		loginService:    loginService,
 		jwtService:      jwtService,
 	}
 	// golang abstract class reference: https://adrianwit.medium.com/abstract-class-reinvented-with-go-4a7326525034

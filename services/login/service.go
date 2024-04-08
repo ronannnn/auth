@@ -1,4 +1,4 @@
-package auth
+package login
 
 import (
 	"context"
@@ -11,8 +11,8 @@ import (
 )
 
 type Service interface {
-	LoginByUsername(ctx context.Context, username, password string) (*AuthResult, error)
-	ChangePwd(ctx context.Context, cmd ChangeUserLoginPwdCommand) error
+	LoginByUsername(ctx context.Context, username, password string) (*Result, error)
+	ChangePwd(ctx context.Context, cmd ChangeUserPwdCmd) error
 }
 
 func ProvideService(
@@ -30,7 +30,7 @@ type ServiceImpl struct {
 	jwtService jwt.Service
 }
 
-func (srv *ServiceImpl) LoginByUsername(ctx context.Context, username, password string) (resp *AuthResult, err error) {
+func (srv *ServiceImpl) LoginByUsername(ctx context.Context, username, password string) (resp *Result, err error) {
 	var user models.User
 	if user, err = srv.store.GetByUsername(username); err == gorm.ErrRecordNotFound {
 		return nil, models.ErrWrongUsernameOrPassword
@@ -47,13 +47,13 @@ func (srv *ServiceImpl) LoginByUsername(ctx context.Context, username, password 
 	}); err != nil {
 		return
 	}
-	return &AuthResult{
+	return &Result{
 		RefreshToken: refreshToken,
 		AccessToken:  accessToken,
 	}, err
 }
 
-func (srv *ServiceImpl) ChangePwd(ctx context.Context, cmd ChangeUserLoginPwdCommand) (err error) {
+func (srv *ServiceImpl) ChangePwd(ctx context.Context, cmd ChangeUserPwdCmd) (err error) {
 	var user models.User
 	if user, err = srv.store.GetById(cmd.UserId); err != nil {
 		return

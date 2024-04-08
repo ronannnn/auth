@@ -4,20 +4,20 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/ronannnn/auth/services/auth"
+	"github.com/ronannnn/auth/services/login"
 	"github.com/ronannnn/infra/models/response"
 )
 
 func (hs *HttpServer) LoginByUsername(w http.ResponseWriter, r *http.Request) {
 	var err error
-	var payload auth.LoginUsernameCommand
+	var payload login.UsernameCmd
 	if err = render.DefaultDecoder(r, &payload); err != nil {
 		response.FailWithErr(w, r, err)
 		return
 	}
 
-	var result *auth.AuthResult
-	if result, err = hs.authService.LoginByUsername(r.Context(), payload.Username, payload.Password); err != nil {
+	var result *login.Result
+	if result, err = hs.loginService.LoginByUsername(r.Context(), payload.Username, payload.Password); err != nil {
 		response.FailWithErr(w, r, err)
 		return
 	}
@@ -26,7 +26,7 @@ func (hs *HttpServer) LoginByUsername(w http.ResponseWriter, r *http.Request) {
 
 func (hs *HttpServer) RefreshTokens(w http.ResponseWriter, r *http.Request) {
 	var err error
-	var payload auth.RefreshTokensCommand
+	var payload login.RefreshTokensCmd
 	if err = render.DefaultDecoder(r, &payload); err != nil {
 		response.ErrRefreshToken(w, r, err)
 		return
@@ -38,7 +38,7 @@ func (hs *HttpServer) RefreshTokens(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.OkWithData(w, r, &auth.AuthResult{
+	response.OkWithData(w, r, &login.Result{
 		RefreshToken: refreshToken,
 		AccessToken:  accessToken,
 	})

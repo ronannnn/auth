@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/ronannnn/auth/internal"
 	"github.com/ronannnn/auth/internal/apis"
-	"github.com/ronannnn/auth/services/auth"
 	"github.com/ronannnn/auth/services/jwt"
 	"github.com/ronannnn/auth/services/jwt/accesstoken"
 	"github.com/ronannnn/auth/services/jwt/refreshtoken"
+	"github.com/ronannnn/auth/services/login"
 	"github.com/ronannnn/auth/services/user"
 
 	"github.com/google/wire"
@@ -31,7 +31,7 @@ var wireSet = wire.NewSet(
 	apirecord.ProvideService,
 	accesstoken.ProvideService,
 	refreshtoken.ProvideService,
-	auth.ProvideService,
+	login.ProvideService,
 	jwt.ProvideService,
 	user.ProvideService,
 	// store
