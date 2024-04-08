@@ -17,6 +17,7 @@ type Service interface {
 	DeleteByIds(ctx context.Context, ids []uint) error
 	List(ctx context.Context, query query.UserQuery) (response.PageResult, error)
 	GetById(ctx context.Context, id uint) (models.User, error)
+	GetByNickname(ctx context.Context, nickname string) (models.User, error)
 }
 
 func ProvideService(
@@ -62,4 +63,8 @@ func (srv *ServiceImpl) List(ctx context.Context, query query.UserQuery) (respon
 
 func (srv *ServiceImpl) GetById(ctx context.Context, id uint) (models.User, error) {
 	return srv.store.GetById(srv.db, id)
+}
+
+func (srv *ServiceImpl) GetByNickname(ctx context.Context, nickname string) (models.User, error) {
+	return srv.store.GetByNickname(srv.db, nickname)
 }
