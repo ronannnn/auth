@@ -10,7 +10,7 @@ type Service interface {
 }
 
 func ProvideService(
-	cfg *cfg.Jwt,
+	cfg *cfg.Auth,
 ) Service {
 	return &ServiceImpl{
 		jwtAuth: jwtauth.New("HS256", []byte(cfg.RefreshTokenSecret), nil),

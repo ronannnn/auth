@@ -29,7 +29,7 @@ type Service interface {
 }
 
 func ProvideService(
-	cfg *cfg.Jwt,
+	cfg *cfg.Auth,
 	db *gorm.DB,
 	refreshtokenService refreshtoken.Service,
 	refreshtokenStore refreshtoken.Store,
@@ -45,7 +45,7 @@ func ProvideService(
 }
 
 type ServiceImpl struct {
-	cfg                 *cfg.Jwt
+	cfg                 *cfg.Auth
 	db                  *gorm.DB
 	refreshtokenService refreshtoken.Service
 	refreshtokenStore   refreshtoken.Store

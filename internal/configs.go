@@ -26,7 +26,7 @@ const (
 type Cfg struct {
 	Sys  cfg.Sys      `mapstructure:"sys"`
 	Log  cfg.Log      `mapstructure:"log"`
-	Jwt  cfg.Jwt      `mapstructure:"jwt"`
+	Auth cfg.Auth     `mapstructure:"auth"`
 	Db   cfg.Db       `mapstructure:"db"`
 	Dfs  cfg.Dfs      `mapstructure:"dfs"`
 	User authcfg.User `mapstructure:"user"`
@@ -44,8 +44,8 @@ func ProvideDbCfg() *cfg.Db {
 	return &GlCfg.Db
 }
 
-func ProvideJwtCfg() *cfg.Jwt {
-	return &GlCfg.Jwt
+func ProvideAuthCfg() *cfg.Auth {
+	return &GlCfg.Auth
 }
 
 func ProvideUserCfg() *authcfg.User {

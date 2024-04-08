@@ -19,7 +19,7 @@ var wireSet = wire.NewSet(
 	internal.ProvideSysCfg,
 	internal.ProvideLogCfg,
 	internal.ProvideDbCfg,
-	internal.ProvideJwtCfg,
+	internal.ProvideAuthCfg,
 	internal.ProvideUserCfg,
 	// infra
 	infra.NewLog,

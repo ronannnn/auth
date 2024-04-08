@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/jwtauth/v5 v5.3.1
 	github.com/go-chi/render v1.0.3
 	github.com/lestrrat-go/jwx/v2 v2.0.21
+	github.com/ronannnn/infra v0.0.29
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.22.0
 	gorm.io/gorm v1.25.9
@@ -92,7 +93,6 @@ require (
 	github.com/google/wire v0.6.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/ronannnn/infra v0.0.27
 	github.com/stretchr/testify v1.9.0
 	gorm.io/plugin/optimisticlock v1.1.1 // indirect
 )
