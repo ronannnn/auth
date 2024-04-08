@@ -6,7 +6,6 @@ import (
 	"path"
 	"time"
 
-	authcfg "github.com/ronannnn/auth/cfg"
 	"github.com/ronannnn/infra/cfg"
 )
 
@@ -24,12 +23,12 @@ const (
 )
 
 type Cfg struct {
-	Sys  cfg.Sys      `mapstructure:"sys"`
-	Log  cfg.Log      `mapstructure:"log"`
-	Auth cfg.Auth     `mapstructure:"auth"`
-	Db   cfg.Db       `mapstructure:"db"`
-	Dfs  cfg.Dfs      `mapstructure:"dfs"`
-	User authcfg.User `mapstructure:"user"`
+	Sys  cfg.Sys  `mapstructure:"sys"`
+	Log  cfg.Log  `mapstructure:"log"`
+	Auth cfg.Auth `mapstructure:"auth"`
+	Db   cfg.Db   `mapstructure:"db"`
+	Dfs  cfg.Dfs  `mapstructure:"dfs"`
+	User cfg.User `mapstructure:"user"`
 }
 
 func ProvideLogCfg() *cfg.Log {
@@ -48,7 +47,7 @@ func ProvideAuthCfg() *cfg.Auth {
 	return &GlCfg.Auth
 }
 
-func ProvideUserCfg() *authcfg.User {
+func ProvideUserCfg() *cfg.User {
 	return &GlCfg.User
 }
 

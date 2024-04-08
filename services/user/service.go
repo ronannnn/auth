@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	"github.com/ronannnn/auth/cfg"
+	"github.com/ronannnn/infra/cfg"
 	"github.com/ronannnn/infra/models"
 	"github.com/ronannnn/infra/models/request/query"
 	"github.com/ronannnn/infra/models/response"

@@ -182,8 +182,8 @@ github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec h1:W09IVJc94
 github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
 github.com/rogpeppe/go-internal v1.12.0 h1:exVL4IDcn6na9z1rAb56Vxr+CgyK3nn3O+epU5NdKM8=
 github.com/rogpeppe/go-internal v1.12.0/go.mod h1:E+RYuTGaKKdloAfM02xzb0FW3Paa99yedzYV+kq4uf4=
-github.com/ronannnn/infra v0.0.29 h1:pyrMbQVBL4iVMlr0vMRzRkgzSYQCojvQF8Dm9zoxzZ4=
-github.com/ronannnn/infra v0.0.29/go.mod h1:uErD4si66slwBi1rCt48KmKd5OEouRGcH3FhZMK5WeU=
+github.com/ronannnn/infra v0.0.30 h1:j9E1RoYpQcnGl9B0ouGp8gPU2ySKhqalv1PhU85yW7o=
+github.com/ronannnn/infra v0.0.30/go.mod h1:uErD4si66slwBi1rCt48KmKd5OEouRGcH3FhZMK5WeU=
 github.com/rs/xid v1.5.0 h1:mKX4bl4iPYJtEIxp6CYiUuLQ/8DYMoz0PUdtGgMFRVc=
 github.com/rs/xid v1.5.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
 github.com/sagikazarmark/locafero v0.4.0 h1:HApY1R9zGo4DBgr7dqsTH/JJxLTTsOt7u6keLGt6kNQ=
