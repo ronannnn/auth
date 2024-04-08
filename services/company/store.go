@@ -8,51 +8,50 @@ import (
 )
 
 type Store interface {
-	create(model *Company) error
-	update(partialUpdatedModel *Company) (Company, error)
-	deleteById(id uint) error
-	deleteByIds(ids []uint) error
-	list(query CompanyQuery) (response.PageResult, error)
-	getById(id uint) (Company, error)
+	Create(tx *gorm.DB, model *Company) error
+	Update(tx *gorm.DB, partialUpdatedModel *Company) (Company, error)
+	DeleteById(tx *gorm.DB, id uint) error
+	DeleteByIds(tx *gorm.DB, ids []uint) error
+	List(tx *gorm.DB, query CompanyQuery) (response.PageResult, error)
+	GetById(tx *gorm.DB, id uint) (Company, error)
 }
 
-func ProvideStore(db *gorm.DB) Store {
-	return StoreImpl{db: db}
+func ProvideStore() Store {
+	return StoreImpl{}
 }
 
 type StoreImpl struct {
-	db *gorm.DB
 }
 
-func (s StoreImpl) create(model *Company) error {
-	return s.db.Create(model).Error
+func (s StoreImpl) Create(tx *gorm.DB, model *Company) error {
+	return tx.Create(model).Error
 }
 
-func (s StoreImpl) update(partialUpdatedModel *Company) (updatedModel Company, err error) {
+func (s StoreImpl) Update(tx *gorm.DB, partialUpdatedModel *Company) (updatedModel Company, err error) {
 	if partialUpdatedModel.Id == 0 {
 		return updatedModel, models.ErrUpdatedId
 	}
-	if err = s.db.Updates(partialUpdatedModel).Error; err != nil {
+	if err = tx.Updates(partialUpdatedModel).Error; err != nil {
 		return
 	}
-	return s.getById(partialUpdatedModel.Id)
+	return s.GetById(tx, partialUpdatedModel.Id)
 }
 
-func (s StoreImpl) deleteById(id uint) error {
-	return s.db.Delete(&Company{}, "id = ?", id).Error
+func (s StoreImpl) DeleteById(tx *gorm.DB, id uint) error {
+	return tx.Delete(&Company{}, "id = ?", id).Error
 }
 
-func (s StoreImpl) deleteByIds(ids []uint) error {
-	return s.db.Delete(&Company{}, "id IN ?", ids).Error
+func (s StoreImpl) DeleteByIds(tx *gorm.DB, ids []uint) error {
+	return tx.Delete(&Company{}, "id IN ?", ids).Error
 }
 
-func (s StoreImpl) list(menuQuery CompanyQuery) (result response.PageResult, err error) {
+func (s StoreImpl) List(tx *gorm.DB, menuQuery CompanyQuery) (result response.PageResult, err error) {
 	var total int64
 	var list []Company
-	if err = s.db.Model(&Company{}).Count(&total).Error; err != nil {
+	if err = tx.Model(&Company{}).Count(&total).Error; err != nil {
 		return
 	}
-	if err = s.db.
+	if err = tx.
 		Scopes(query.MakeConditionFromQuery(menuQuery)).
 		Preload("Apis").
 		Find(&list).Error; err != nil {
@@ -67,7 +66,7 @@ func (s StoreImpl) list(menuQuery CompanyQuery) (result response.PageResult, err
 	return
 }
 
-func (s StoreImpl) getById(id uint) (model Company, err error) {
-	err = s.db.Preload("Apis").First(&model, "id = ?", id).Error
+func (s StoreImpl) GetById(tx *gorm.DB, id uint) (model Company, err error) {
+	err = tx.Preload("Apis").First(&model, "id = ?", id).Error
 	return
 }

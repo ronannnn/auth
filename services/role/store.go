@@ -8,31 +8,30 @@ import (
 )
 
 type Store interface {
-	create(model *Role) error
-	update(partialUpdatedModel *Role) (Role, error)
-	deleteById(id uint) error
-	deleteByIds(ids []uint) error
-	list(query RoleQuery) (response.PageResult, error)
-	getById(id uint) (Role, error)
+	Create(tx *gorm.DB, model *Role) error
+	Update(tx *gorm.DB, partialUpdatedModel *Role) (Role, error)
+	DeleteById(tx *gorm.DB, id uint) error
+	DeleteByIds(tx *gorm.DB, ids []uint) error
+	List(tx *gorm.DB, query RoleQuery) (response.PageResult, error)
+	GetById(tx *gorm.DB, id uint) (Role, error)
 }
 
-func ProvideStore(db *gorm.DB) Store {
-	return StoreImpl{db: db}
+func ProvideStore() Store {
+	return StoreImpl{}
 }
 
 type StoreImpl struct {
-	db *gorm.DB
 }
 
-func (s StoreImpl) create(model *Role) error {
-	return s.db.Create(model).Error
+func (s StoreImpl) Create(tx *gorm.DB, model *Role) error {
+	return tx.Create(model).Error
 }
 
-func (s StoreImpl) update(partialUpdatedModel *Role) (updatedModel Role, err error) {
+func (s StoreImpl) Update(tx *gorm.DB, partialUpdatedModel *Role) (updatedModel Role, err error) {
 	if partialUpdatedModel.Id == 0 {
 		return updatedModel, models.ErrUpdatedId
 	}
-	if err = s.db.Transaction(func(tx *gorm.DB) (err error) {
+	if err = tx.Transaction(func(tx *gorm.DB) (err error) {
 		// update associations with Associations()
 		if partialUpdatedModel.Menus != nil {
 			if err = tx.Model(partialUpdatedModel).Association("Menus").Replace(partialUpdatedModel.Menus); err != nil {
@@ -54,24 +53,24 @@ func (s StoreImpl) update(partialUpdatedModel *Role) (updatedModel Role, err err
 	}); err != nil {
 		return updatedModel, err
 	}
-	return s.getById(partialUpdatedModel.Id)
+	return s.GetById(tx, partialUpdatedModel.Id)
 }
 
-func (s StoreImpl) deleteById(id uint) error {
-	return s.db.Delete(&Role{}, "id = ?", id).Error
+func (s StoreImpl) DeleteById(tx *gorm.DB, id uint) error {
+	return tx.Delete(&Role{}, "id = ?", id).Error
 }
 
-func (s StoreImpl) deleteByIds(ids []uint) error {
-	return s.db.Delete(&Role{}, "id IN ?", ids).Error
+func (s StoreImpl) DeleteByIds(tx *gorm.DB, ids []uint) error {
+	return tx.Delete(&Role{}, "id IN ?", ids).Error
 }
 
-func (s StoreImpl) list(roleQuery RoleQuery) (result response.PageResult, err error) {
+func (s StoreImpl) List(tx *gorm.DB, roleQuery RoleQuery) (result response.PageResult, err error) {
 	var total int64
 	var list []Role
-	if err = s.db.Model(&Role{}).Count(&total).Error; err != nil {
+	if err = tx.Model(&Role{}).Count(&total).Error; err != nil {
 		return
 	}
-	if err = s.db.
+	if err = tx.
 		Scopes(query.MakeConditionFromQuery(roleQuery)).
 		Scopes(query.Paginate(roleQuery.Pagination.PageNum, roleQuery.Pagination.PageSize)).
 		Preload("Menus").
@@ -87,7 +86,7 @@ func (s StoreImpl) list(roleQuery RoleQuery) (result response.PageResult, err er
 	return
 }
 
-func (s StoreImpl) getById(id uint) (model Role, err error) {
-	err = s.db.Preload("Menus").First(&model, "id = ?", id).Error
+func (s StoreImpl) GetById(tx *gorm.DB, id uint) (model Role, err error) {
+	err = tx.Preload("Menus").First(&model, "id = ?", id).Error
 	return
 }

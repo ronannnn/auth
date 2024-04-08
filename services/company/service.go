@@ -2,6 +2,7 @@ package company
 
 import (
 	"github.com/ronannnn/infra/models/response"
+	"gorm.io/gorm"
 )
 
 type Service interface {
@@ -14,37 +15,40 @@ type Service interface {
 }
 
 func ProvideService(
+	db *gorm.DB,
 	store Store,
 ) Service {
 	return &ServiceImpl{
+		db:    db,
 		store: store,
 	}
 }
 
 type ServiceImpl struct {
+	db    *gorm.DB
 	store Store
 }
 
 func (srv *ServiceImpl) Create(model *Company) (err error) {
-	return srv.store.create(model)
+	return srv.store.Create(srv.db, model)
 }
 
 func (srv *ServiceImpl) Update(partialUpdatedModel *Company) (Company, error) {
-	return srv.store.update(partialUpdatedModel)
+	return srv.store.Update(srv.db, partialUpdatedModel)
 }
 
 func (srv *ServiceImpl) DeleteById(id uint) error {
-	return srv.store.deleteById(id)
+	return srv.store.DeleteById(srv.db, id)
 }
 
 func (srv *ServiceImpl) DeleteByIds(ids []uint) error {
-	return srv.store.deleteByIds(ids)
+	return srv.store.DeleteByIds(srv.db, ids)
 }
 
 func (srv *ServiceImpl) List(query CompanyQuery) (response.PageResult, error) {
-	return srv.store.list(query)
+	return srv.store.List(srv.db, query)
 }
 
 func (srv *ServiceImpl) GetById(id uint) (Company, error) {
-	return srv.store.getById(id)
+	return srv.store.GetById(srv.db, id)
 }

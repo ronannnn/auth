@@ -8,51 +8,50 @@ import (
 )
 
 type Store interface {
-	create(model *Department) error
-	update(partialUpdatedModel *Department) (Department, error)
-	deleteById(id uint) error
-	deleteByIds(ids []uint) error
-	list(query DepartmentQuery) (response.PageResult, error)
-	getById(id uint) (Department, error)
+	Create(tx *gorm.DB, model *Department) error
+	Update(tx *gorm.DB, partialUpdatedModel *Department) (Department, error)
+	DeleteById(tx *gorm.DB, id uint) error
+	DeleteByIds(tx *gorm.DB, ids []uint) error
+	List(tx *gorm.DB, query DepartmentQuery) (response.PageResult, error)
+	GetById(tx *gorm.DB, id uint) (Department, error)
 }
 
-func ProvideStore(db *gorm.DB) Store {
-	return StoreImpl{db: db}
+func ProvideStore() Store {
+	return StoreImpl{}
 }
 
 type StoreImpl struct {
-	db *gorm.DB
 }
 
-func (s StoreImpl) create(model *Department) error {
-	return s.db.Create(model).Error
+func (s StoreImpl) Create(tx *gorm.DB, model *Department) error {
+	return tx.Create(model).Error
 }
 
-func (s StoreImpl) update(partialUpdatedModel *Department) (updatedModel Department, err error) {
+func (s StoreImpl) Update(tx *gorm.DB, partialUpdatedModel *Department) (updatedModel Department, err error) {
 	if partialUpdatedModel.Id == 0 {
 		return updatedModel, models.ErrUpdatedId
 	}
-	if err = s.db.Updates(partialUpdatedModel).Error; err != nil {
+	if err = tx.Updates(partialUpdatedModel).Error; err != nil {
 		return
 	}
-	return s.getById(partialUpdatedModel.Id)
+	return s.GetById(tx, partialUpdatedModel.Id)
 }
 
-func (s StoreImpl) deleteById(id uint) error {
-	return s.db.Delete(&Department{}, "id = ?", id).Error
+func (s StoreImpl) DeleteById(tx *gorm.DB, id uint) error {
+	return tx.Delete(&Department{}, "id = ?", id).Error
 }
 
-func (s StoreImpl) deleteByIds(ids []uint) error {
-	return s.db.Delete(&Department{}, "id IN ?", ids).Error
+func (s StoreImpl) DeleteByIds(tx *gorm.DB, ids []uint) error {
+	return tx.Delete(&Department{}, "id IN ?", ids).Error
 }
 
-func (s StoreImpl) list(menuQuery DepartmentQuery) (result response.PageResult, err error) {
+func (s StoreImpl) List(tx *gorm.DB, menuQuery DepartmentQuery) (result response.PageResult, err error) {
 	var total int64
 	var list []Department
-	if err = s.db.Model(&Department{}).Count(&total).Error; err != nil {
+	if err = tx.Model(&Department{}).Count(&total).Error; err != nil {
 		return
 	}
-	if err = s.db.
+	if err = tx.
 		Scopes(query.MakeConditionFromQuery(menuQuery)).
 		Preload("Apis").
 		Find(&list).Error; err != nil {
@@ -67,7 +66,7 @@ func (s StoreImpl) list(menuQuery DepartmentQuery) (result response.PageResult, 
 	return
 }
 
-func (s StoreImpl) getById(id uint) (model Department, err error) {
-	err = s.db.Preload("Apis").First(&model, "id = ?", id).Error
+func (s StoreImpl) GetById(tx *gorm.DB, id uint) (model Department, err error) {
+	err = tx.Preload("Apis").First(&model, "id = ?", id).Error
 	return
 }
