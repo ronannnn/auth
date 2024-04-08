@@ -9,12 +9,12 @@ latest-filename = "gx-fms.log"
 log-in-console = true
 log-in-rotate-file = true
 
-[jwt]
+[auth]
 access-token-hour-duration = 1
 refresh-token-hour-duration = 24
 access-token-secret = "qpwoalskzmxn1029"
 refresh-token-secret = "122f9dfjkdsla"
-enable = true
+enabled = true
 
 [db]
 db-type = "mssql"
