@@ -55,7 +55,7 @@ type ServiceImpl struct {
 func (srv *ServiceImpl) GenerateTokens(ctx context.Context, claims refreshtoken.BaseClaims) (refreshToken string, accessToken string, err error) {
 	err = srv.db.Transaction(func(tx *gorm.DB) (err error) {
 		refreshTokenClaims := claims.ToMap()
-		jwtauth.SetExpiryIn(refreshTokenClaims, time.Duration(srv.cfg.RefreshTokenHourDuration)*time.Hour)
+		jwtauth.SetExpiryIn(refreshTokenClaims, time.Duration(srv.cfg.RefreshTokenMinuteDuration)*time.Minute)
 		if _, refreshToken, err = srv.refreshtokenService.GetJwtAuth().Encode(refreshTokenClaims); err != nil {
 			return
 		}
@@ -63,7 +63,7 @@ func (srv *ServiceImpl) GenerateTokens(ctx context.Context, claims refreshtoken.
 			return
 		}
 		accessTokenClaims := claims.ToMap()
-		jwtauth.SetExpiryIn(accessTokenClaims, time.Duration(srv.cfg.AccessTokenHourDuration)*time.Hour)
+		jwtauth.SetExpiryIn(accessTokenClaims, time.Duration(srv.cfg.AccessTokenMinuteDuration)*time.Minute)
 		_, accessToken, err = srv.accesstokenService.GetJwtAuth().Encode(accessTokenClaims)
 		return
 	})
