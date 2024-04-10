@@ -7,7 +7,7 @@ require (
 	github.com/go-chi/jwtauth/v5 v5.3.1
 	github.com/go-chi/render v1.0.3
 	github.com/lestrrat-go/jwx/v2 v2.0.21
-	github.com/ronannnn/infra v0.0.31
+	github.com/ronannnn/infra v0.0.32
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.22.0
 	gorm.io/gorm v1.25.9
